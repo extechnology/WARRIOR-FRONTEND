@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axiosInstance from "../api/axios";
 import { mergeCart } from "../utils/mergeCart";
+import { toast } from "react-toastify";
 
 
 function Login() {
@@ -76,13 +77,16 @@ function Login() {
 
       } catch (error) {
         if (error.response) {
-          if (error.response.status === 401) {
+          if (error.response.status === 401 || 400) {
             setErrors({ general: "Invalid credentials" });
+            toast.error("Invalid credentials");
           } else {
             setErrors(error.response.data);
+            toast.error(error.response.data.message);
           }
         } else if (error.message) {
           setErrors({ general: "Network error. Please try again." });
+          toast.error("Network error. Please try again.");
         } else {
           setErrors({ general: "An unexpected error occurred." });
         }
